@@ -12,7 +12,9 @@ const files={
  '/stile.css':'stile.css',
  '/robots.txt':'robots.txt',
  '/sitemap.xml':'sitemap.xml',
- '/favicon.svg':'favicon.svg'
+ '/favicon.svg':'favicon.svg',
+ '/immagine-ia-tavola.svg':'immagine-ia-tavola.svg',
+ '/immagine-ia-camera.svg':'immagine-ia-camera.svg'
 };
 const security={
  'Strict-Transport-Security':'max-age=31536000',
