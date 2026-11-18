@@ -24,3 +24,14 @@
 .scene-strip img{width:100%;height:270px;object-fit:cover;background:#e8e0d5}
 .scene-strip figcaption{font-size:12px;color:#5f685e;padding:12px 14px}
 @media(max-width:700px){.voices,.scene-strip{grid-template-columns:1fr}.voice-section{padding:20px 16px}.voice{padding:21px}.voice p{font-size:18px}.scene-strip img{height:235px}}
+
+.marco-profile{display:grid;grid-template-columns:minmax(220px,.7fr) 1.3fr;gap:clamp(25px,6vw,85px);align-items:center;padding:65px 0 30px}
+.marco-profile .profile-photo{background:#eee4d7;border-radius:14px;overflow:hidden}
+.marco-profile img{width:100%;height:auto;object-fit:cover;max-height:570px}
+.marco-profile h2,.marco-action h2{font-size:clamp(30px,3.2vw,43px);margin:15px 0 22px}
+.marco-profile p,.marco-action p{max-width:610px;line-height:1.85}
+.marco-action{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,5vw,65px);align-items:center;padding:40px 0 62px}
+.marco-action figure{margin:0}
+.marco-action img{border-radius:11px;width:100%;height:auto;max-height:445px;object-fit:cover}
+.marco-action figcaption{font-size:12px;color:#64716b;padding-top:9px}
+@media(max-width:720px){.marco-profile,.marco-action{grid-template-columns:1fr}.marco-profile{padding:35px 0 15px}.marco-profile .profile-photo{max-width:380px;margin:0 auto}.marco-action{padding:15px 0 45px}}
