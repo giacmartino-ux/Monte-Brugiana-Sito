@@ -20,7 +20,16 @@ const headers = {
 };
 function serve(req,res){
  const url=(req.url||'/').split('?')[0];
- if(url==='/health'){res.writeHead(200,{'Content-Type':'text/plain; charset=utf-8'});return res.end('ok')}
+ if(url==='/health'){
+  const assetsOK=[...assetNames].every(name=>{
+    try{const p=path.join(__dirname,'assets',name+'.jpg'); const st=fs.statSync(p); return st.isFile() && st.size>20000}
+    catch{return false}
+  });
+  const pagesOK=[...staticPages.values()].every(file=>fs.existsSync(path.join(__dirname,file)));
+  const ok=assetsOK && pagesOK;
+  res.writeHead(ok?200:503,{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'});
+  return res.end(ok?'ok - pages and photographic assets verified':'unhealthy - page or asset unavailable');
+}
  if(url==='/favicon.ico'){res.writeHead(204,headers);return res.end()}
  let file=staticPages.get(url);
  if(!file && /^\/assets\/[a-z-]+\.jpg$/.test(url)){
