@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://brugiana.fraternitdioregina.it/sitemap.xml
