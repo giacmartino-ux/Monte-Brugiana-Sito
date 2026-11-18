@@ -6,17 +6,17 @@ const staticPages = new Map([
  ['/', 'index.html'], ['/index.html','index.html'],
  ['/la-fatica.html','la-fatica.html'], ['/la-comunita.html','la-comunita.html'],
  ['/don-marco.html','don-marco.html'], ['/il-percorso.html','il-percorso.html'],
- ['/stile.css','stile.css'], ['/favicon.svg','favicon.svg'],
+ ['/stile.css','stile.css'], ['/guida.js','guida.js'], ['/favicon.svg','favicon.svg'],
  ['/robots.txt','robots.txt'], ['/sitemap.xml','sitemap.xml'],
 ]);
-const assetNames = new Set(['marco-profilo','marco-intervento','fatica-sera','hero-amici','vita-insieme','camminare','stanza','ascolto']);
+const assetNames = new Set(['marco-profilo','marco-intervento','fatica-ufficio','solitudine-convento','tavola-interna','colloquio-sala','strada-tramonto','fatica-sera','hero-amici','vita-insieme','camminare','stanza','ascolto']);
 const headers = {
   'X-Content-Type-Options':'nosniff',
   'X-Frame-Options':'DENY',
   'Referrer-Policy':'strict-origin-when-cross-origin',
   'Permissions-Policy':'camera=(), microphone=(), geolocation=()',
   'Strict-Transport-Security':'max-age=31536000; includeSubDomains',
-  'Content-Security-Policy':"default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+  'Content-Security-Policy':"default-src 'none'; script-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
 };
 function serve(req,res){
  const url=(req.url||'/').split('?')[0];
@@ -40,7 +40,7 @@ function serve(req,res){
  const where=path.join(__dirname,file);
  fs.readFile(where,(err,body)=>{
   if(err){res.writeHead(503,{'Content-Type':'text/plain; charset=utf-8',...headers});return res.end('Risorsa momentaneamente non disponibile')}
-  const mime=file.endsWith('.jpg')?'image/jpeg':file.endsWith('.svg')?'image/svg+xml; charset=utf-8':file.endsWith('.css')?'text/css; charset=utf-8':file.endsWith('.txt')?'text/plain; charset=utf-8':file.endsWith('.xml')?'application/xml; charset=utf-8':'text/html; charset=utf-8';
+  const mime=file.endsWith('.jpg')?'image/jpeg':file.endsWith('.js')?'text/javascript; charset=utf-8':file.endsWith('.svg')?'image/svg+xml; charset=utf-8':file.endsWith('.css')?'text/css; charset=utf-8':file.endsWith('.txt')?'text/plain; charset=utf-8':file.endsWith('.xml')?'application/xml; charset=utf-8':'text/html; charset=utf-8';
   res.writeHead(200,{'Content-Type':mime,'Cache-Control':file.startsWith('assets/')?'public, max-age=86400':'public, max-age=60',...headers});
   if(req.method==='HEAD')return res.end();
   return res.end(body)

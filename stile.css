@@ -70,3 +70,16 @@
 .chapter-contact a{font-weight:800;color:#87503b;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:950px){.reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.reading-section{padding:40px 0 46px}.reading-grid{grid-template-columns:1fr}.reading-card{min-height:220px}.reading-after,.chapter-contact{display:flex;flex-direction:column;align-items:flex-start;gap:10px}.chapter-contact{padding:20px 5%}.reading-write{flex-shrink:1}.reading-header h2{font-size:29px}}
+
+/* Percorso di lettura in quattro tappe, non una lunga homepage */
+.hero{min-height:540px}.hero-visual{min-height:365px}.hero-body{padding-block:50px}
+.four-nav{padding:48px 0 65px}.four-nav h2{margin-bottom:12px}
+.guide-introduction{max-width:670px;font-size:15px;line-height:1.75;color:#627167;margin:0 0 28px}
+.four-links a{min-height:165px}.four-links a:hover{border-color:#aa7655}
+.chapter-bar .steps a.completed{background:#89a28c}
+.guide-quick{font-size:13px;font-weight:750;color:#91523d;white-space:nowrap;text-underline-offset:4px}
+.page-heading{min-height:310px}.story{padding-top:58px;padding-bottom:45px}
+.next-chapter{padding:35px 0}.next-chapter h2{font-size:clamp(26px,3vw,34px);margin-bottom:12px}
+.next-chapter .btn{flex-shrink:0;max-width:300px}
+@media(max-width:900px){.chapter-bar .wrap{flex-wrap:wrap;gap:10px}.chapter-bar .subnav{display:none}}
+@media(max-width:720px){.hero-body{padding:32px 6% 24px}.hero-body h1{font-size:34px}.hero-visual{min-height:210px}.four-nav{padding:32px 0 42px}.four-links a{min-height:118px}.guide-introduction{font-size:14px}.page-heading{min-height:auto}.story{padding:36px 0 42px}.next-chapter{padding:28px 0}.chapter-bar .steps a{width:27px}.guide-quick{font-size:12px}}
