@@ -49,3 +49,24 @@
 .hero-visual img{object-position:center}
 .scene-strip img{object-fit:cover;background:#e7dfd3}
 @media(max-width:720px){.voice-answer{grid-template-columns:1fr;gap:8px}.voice-section h2{font-size:30px}.voice p{font-size:20px}}
+
+/* Approfondimenti verificabili, discreti e non simili a un elenco bibliografico */
+.reading-section{padding:66px 0 72px;margin-top:12px;margin-bottom:35px;border-top:1px solid #d9d5ca}
+.reading-header{max-width:830px;margin-bottom:30px}
+.reading-header h2{font-family:Georgia,serif;font-weight:400;font-size:clamp(28px,3vw,40px);margin:11px 0 12px;color:#31423a;line-height:1.23}
+.reading-header p{font-size:15px;color:#5c6b61;max-width:730px;line-height:1.7}
+.reading-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.reading-card{display:flex;flex-direction:column;align-items:flex-start;gap:15px;background:#fffef9;border:1px solid #dddcd1;border-top:4px solid #b67b59;border-radius:12px;padding:24px;min-height:290px;box-shadow:0 5px 24px #1c30230b;transition:transform .15s,box-shadow .15s}
+.reading-card:nth-child(2n){border-top-color:#687e70;background:#f4f6ef}
+.reading-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px #1c30231c}
+.reading-type{font-size:10px;font-weight:750;letter-spacing:.115em;line-height:1.5;color:#a25d42}
+.reading-card h3{font:400 clamp(20px,2vw,25px)/1.28 Georgia,serif;margin:0;color:#2c4239}
+.reading-card p{font-size:14px;line-height:1.7;color:#59675c;margin:0 0 9px}
+.reading-open{display:flex;align-items:center;justify-content:space-between;gap:8px;text-decoration:none;margin-top:auto;padding-top:13px;border-top:1px solid #d5d8cf;width:100%;font-size:13px;font-weight:750;color:#86472f}
+.reading-open span{font-size:18px}
+.reading-after{display:flex;justify-content:space-between;align-items:center;gap:23px;padding:22px 0 0;font-size:14px;color:#57685c}
+.reading-write{font-weight:800;color:#894c37;text-decoration:underline;text-underline-offset:5px;flex-shrink:0}
+.chapter-contact{background:#f3ebdf;padding:15px 5%;text-align:center;display:flex;justify-content:center;gap:20px;align-items:center;color:#44554b;font-size:14px}
+.chapter-contact a{font-weight:800;color:#87503b;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:950px){.reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.reading-section{padding:40px 0 46px}.reading-grid{grid-template-columns:1fr}.reading-card{min-height:220px}.reading-after,.chapter-contact{display:flex;flex-direction:column;align-items:flex-start;gap:10px}.chapter-contact{padding:20px 5%}.reading-write{flex-shrink:1}.reading-header h2{font-size:29px}}
