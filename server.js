@@ -20,7 +20,7 @@ const security={
  'Referrer-Policy':'strict-origin-when-cross-origin',
  'X-Frame-Options':'DENY',
  'Permissions-Policy':'camera=(), microphone=(), geolocation=()',
- 'Content-Security-Policy':"default-src 'none'; img-src 'self' https://images.unsplash.com https://www.brugiana.it data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+ 'Content-Security-Policy':"default-src 'none'; img-src 'self' https://images.unsplash.com https://www.brugiana.it https://www.visittuscany.com https://storage.googleapis.com data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
 };
 http.createServer((req,res)=>{
  const pathname=(req.url||'/').split('?')[0];
