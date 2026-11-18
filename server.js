@@ -14,7 +14,9 @@ const files={
  '/sitemap.xml':'sitemap.xml',
  '/favicon.svg':'favicon.svg',
  '/immagine-ia-tavola.svg':'immagine-ia-tavola.svg',
- '/immagine-ia-camera.svg':'immagine-ia-camera.svg'
+ '/immagine-ia-camera.svg':'immagine-ia-camera.svg',
+ '/don-marco-profilo.svg':'don-marco-profilo.svg',
+ '/don-marco-incontro.svg':'don-marco-incontro.svg'
 };
 const security={
  'Strict-Transport-Security':'max-age=31536000',
