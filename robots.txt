@@ -1,3 +1,6 @@
 User-agent: *
 Allow: /
-Sitemap: https://brugiana.fraternitdioregina.it/sitemap.xml
+Sitemap: https://indisparte.it/sitemap.xml
+Disallow: /editor
+Disallow: /privato/
+Disallow: /api-editor.php
