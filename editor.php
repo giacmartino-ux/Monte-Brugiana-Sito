@@ -8,11 +8,14 @@ if (!is_file(STATE.'/password.hash')) {
 if ($_SERVER['REQUEST_METHOD']==='POST') {
  if (!hash_equals($_SESSION['csrf'], (string)($_POST['csrf']??''))) {http_response_code(403);exit;}
  if (isset($_POST['logout'])) {session_destroy();header('Location: /editor');exit;}
- if (time() < (int)($_SESSION['retry']??0)) {http_response_code(429);exit('Riprova tra qualche secondo.');}
+ $gate=fopen(STATE.'/login.lock','c+');
+ if(!$gate||!flock($gate,LOCK_EX)){http_response_code(503);exit;}
+ $retry=(int)stream_get_contents($gate);
+ if (time() < max($retry,(int)($_SESSION['retry']??0))) {http_response_code(429);exit('Riprova tra qualche secondo.');}
  if (password_verify((string)($_POST['password']??''),trim(file_get_contents(STATE.'/password.hash')))) {
-  session_regenerate_id(true);$_SESSION['auth']=true;$_SESSION['csrf']=bin2hex(random_bytes(32));header('Location: /editor');exit;
+  session_regenerate_id(true);$_SESSION['auth']=true;$_SESSION['last']=time();$_SESSION['csrf']=bin2hex(random_bytes(32));header('Location: /editor');exit;
  }
- $_SESSION['retry']=time()+5;
+ $_SESSION['retry']=time()+5;ftruncate($gate,0);rewind($gate);fwrite($gate,(string)$_SESSION['retry']);fflush($gate);flock($gate,LOCK_UN);fclose($gate);
 }
 if (empty($_SESSION['auth'])) {
  header('X-Robots-Tag: noindex, nofollow');
@@ -20,4 +23,5 @@ if (empty($_SESSION['auth'])) {
 }
 header('X-Robots-Tag: noindex, nofollow');
 $h=file_get_contents(__DIR__.'/editor.html');
+$h=str_replace('<form action="/editor" method="post" id="logout-form" hidden></form>','<form action="/editor" method="post"><input type="hidden" name="csrf" value="'.htmlspecialchars($_SESSION['csrf'],ENT_QUOTES).'"><button name="logout" value="1">Esci</button></form>',$h);
 echo str_replace('</head>','<meta name="editor-csrf" content="'.htmlspecialchars($_SESSION['csrf'],ENT_QUOTES).'"></head>',$h);

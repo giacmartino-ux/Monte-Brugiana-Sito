@@ -6,6 +6,8 @@ ini_set('session.use_strict_mode','1');
 session_set_cookie_params(['secure'=>true,'httponly'=>true,'samesite'=>'Strict','path'=>'/']);
 session_start();
 header('Cache-Control: no-store');
+if(!empty($_SESSION['auth']) && time()-(int)($_SESSION['last']??0)>7200){unset($_SESSION['auth']);}
+if(!empty($_SESSION['auth']))$_SESSION['last']=time();
 $_SESSION['csrf']??=bin2hex(random_bytes(32));
 function require_editor():void {
  if (empty($_SESSION['auth'])) {http_response_code(401);exit;}

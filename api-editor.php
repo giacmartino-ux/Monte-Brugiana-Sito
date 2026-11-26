@@ -17,6 +17,7 @@ function write_atomic(string $p,string $s):void {
  if(file_put_contents($tmp,$s,LOCK_EX)!==strlen($s)||!rename($tmp,$p)){@unlink($tmp);throw new RuntimeException('Scrittura fallita');}
 }
 function validate_html(string $html):void {
+ if(!class_exists('DOMDocument'))throw new RuntimeException('Estensione PHP DOM non disponibile');
  if(strlen($html)>500000||!str_contains(strtolower($html),'<html')||!str_contains(strtolower($html),'</html>'))throw new RuntimeException('Pagina non valida');
  $d=new DOMDocument();$prev=libxml_use_internal_errors(true);$d->loadHTML($html,LIBXML_NONET);libxml_clear_errors();libxml_use_internal_errors($prev);
  foreach($d->getElementsByTagName('*') as $el){
@@ -63,6 +64,11 @@ try{
   $dest=__DIR__.$p;if(is_file($dest)&&hash_file('sha256',$dest)!==hash('sha256',$b))fail('Nome fotografia già in uso');
   $decoded[$p]=$b;
  }
+ foreach($next as $p=>$html){
+  $d=new DOMDocument();$prev=libxml_use_internal_errors(true);$d->loadHTML($html,LIBXML_NONET);libxml_clear_errors();libxml_use_internal_errors($prev);
+  foreach($d->getElementsByTagName('img') as $img){$v=$img->getAttribute('src');if(!isset($decoded[$v])&&!is_file(__DIR__.$v))fail('Foto mancante in '.$p);}
+  foreach($d->getElementsByTagName('a') as $a){$v=$a->getAttribute('href');if($v==='')fail('Collegamento vuoto in '.$p);if(str_starts_with($v,'/')&&!str_starts_with($v,'//')){$t=parse_url($v,PHP_URL_PATH);$t=$t==='/'?'index.html':ltrim((string)$t,'/');if(!isset($next[$t]))fail('Collegamento interno mancante in '.$p);}}
+ }
  $backup='backup-'.gmdate('Ymd-His').'-'.bin2hex(random_bytes(4)).'.json';
  write_atomic(STATE.'/'.$backup,json_encode(['pages'=>$old],JSON_THROW_ON_ERROR));
  $sitemap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
@@ -80,4 +86,4 @@ try{
   write_atomic(__DIR__.'/sitemap.xml',$oldmap);throw $e;
  }
  echo json_encode(['ok'=>true,'head'=>version(pages()),'backup'=>$backup]);
-}catch(Throwable $e){error_log('Editor: '.$e->getMessage());fail('Operazione non completata: '.$e->getMessage());}
+}catch(Throwable $e){error_log('Editor: '.$e->getMessage());fail('Operazione non completata. Controllare i dati o il registro errori PHP.');}

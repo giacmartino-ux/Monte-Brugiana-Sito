@@ -7,3 +7,5 @@ Bozza tecnica PHP, non ancora collaudata su Aruba. Non unire a main.
 5. Verificare dall'esterno: accesso API anonimo 401, password hash non leggibile, tutte le foto e 16 tappe guidate, no richieste GitHub/Railway.
 6. Solo dopo collaudo dismettere Railway. Le bozze locali nel vecchio browser devono essere esportate prima del passaggio e riconciliate con la nuova versione.
 Limiti: link esterni segnalati per controllo manuale; nessuna verifica di recapito email/telefono; pubblicazione multi-file con backup e rollback, non transazione atomica globale. Non è ancora una consegna definitiva.
+
+Controlli aggiunti: scadenza sessione dopo due ore, uscita esplicita, limitazione tentativi di accesso condivisa tra sessioni, controllo lato server delle foto e delle destinazioni interne. PHP DOM richiesto. La verifica dei permessi e il collaudo effettivo su Aruba restano obbligatori.
