@@ -14,11 +14,11 @@ function valid_page(string $p):bool{return preg_match('/^[a-z0-9-]{1,100}\.html$
 function valid_asset(string $p):bool{return preg_match('#^/assets/editor-[a-z0-9-]{1,90}\.(jpg|png|webp)$#D',$p)===1;}
 function write_atomic(string $p,string $s):void {
  $tmp=tempnam(dirname($p),'.edit-');if($tmp===false)throw new RuntimeException('File temporaneo non disponibile');
- if(file_put_contents($tmp,$s,LOCK_EX)!==strlen($s)||!rename($tmp,$p)){@unlink($tmp);throw new RuntimeException('Scrittura fallita');}
+ if(file_put_contents($tmp,$s,LOCK_EX)!==strlen($s)||!chmod($tmp,str_starts_with($p,STATE.'/')?0600:0644)||!rename($tmp,$p)){@unlink($tmp);throw new RuntimeException('Scrittura fallita');}
 }
 function validate_html(string $html):void {
  if(!class_exists('DOMDocument'))throw new RuntimeException('Estensione PHP DOM non disponibile');
- if(strlen($html)>500000||!str_contains(strtolower($html),'<html')||!str_contains(strtolower($html),'</html>'))throw new RuntimeException('Pagina non valida');
+ if(preg_match('/<\?(?:php|=)/i',$html)||strlen($html)>500000||!str_contains(strtolower($html),'<html')||!str_contains(strtolower($html),'</html>'))throw new RuntimeException('Pagina non valida');
  $d=new DOMDocument();$prev=libxml_use_internal_errors(true);$d->loadHTML($html,LIBXML_NONET);libxml_clear_errors();libxml_use_internal_errors($prev);
  foreach($d->getElementsByTagName('*') as $el){
   $tag=strtolower($el->tagName);
@@ -64,10 +64,29 @@ try{
   $dest=__DIR__.$p;if(is_file($dest)&&hash_file('sha256',$dest)!==hash('sha256',$b))fail('Nome fotografia già in uso');
   $decoded[$p]=$b;
  }
+ $docs=[];
  foreach($next as $p=>$html){
-  $d=new DOMDocument();$prev=libxml_use_internal_errors(true);$d->loadHTML($html,LIBXML_NONET);libxml_clear_errors();libxml_use_internal_errors($prev);
-  foreach($d->getElementsByTagName('img') as $img){$v=$img->getAttribute('src');if(!isset($decoded[$v])&&!is_file(__DIR__.$v))fail('Foto mancante in '.$p);}
-  foreach($d->getElementsByTagName('a') as $a){$v=$a->getAttribute('href');if($v==='')fail('Collegamento vuoto in '.$p);if(str_starts_with($v,'/')&&!str_starts_with($v,'//')){$t=parse_url($v,PHP_URL_PATH);$t=$t==='/'?'index.html':ltrim((string)$t,'/');if(!isset($next[$t]))fail('Collegamento interno mancante in '.$p);}}
+  $d=new DOMDocument();$prev=libxml_use_internal_errors(true);$d->loadHTML($html,LIBXML_NONET);libxml_clear_errors();libxml_use_internal_errors($prev);$docs[$p]=$d;
+ }
+ foreach($docs as $p=>$d){
+  $photos=[];
+  foreach($d->getElementsByTagName('img') as $img)$photos[]=$img->getAttribute('src');
+  foreach($d->getElementsByTagName('*') as $el)if($el->hasAttribute('style')){
+   preg_match_all("~url\\(\\s*['\"]?([^'\"\\s)]+)~i",$el->getAttribute('style'),$matches);
+   foreach($matches[1] as $src)$photos[]=$src;
+  }
+  foreach($photos as $v){
+   if(!preg_match('#^/assets/[a-z0-9-]+\.(jpg|png|webp)$#D',$v)||(!isset($decoded[$v])&&!is_file(__DIR__.$v)))fail('Foto non valida o mancante in '.$p);
+  }
+  foreach($d->getElementsByTagName('a') as $a){
+   $v=$a->getAttribute('href');
+   if($v===''||preg_match('/[\x00-\x20]/',$v)||!preg_match('#^(?:https?://[^/]+|mailto:|tel:|/(?!/)|\#)#i',$v))fail('Collegamento non valido in '.$p);
+   $parts=parse_url($v);if($parts===false)fail('Indirizzo non valido in '.$p);
+   if(isset($parts['scheme'])&&!in_array(strtolower($parts['host']??''),['indisparte.it','www.indisparte.it'],true))continue;
+   $t=$parts['path']??'';$t=$t===''?$p:($t==='/'?'index.html':ltrim($t,'/'));
+   if(!isset($docs[$t]))fail('Collegamento interno mancante in '.$p.': '.$v);
+   if(!empty($parts['fragment'])&&!$docs[$t]->getElementById(rawurldecode($parts['fragment'])))fail('Ancora mancante in '.$p.': '.$v);
+  }
  }
  $backup='backup-'.gmdate('Ymd-His').'-'.bin2hex(random_bytes(4)).'.json';
  write_atomic(STATE.'/'.$backup,json_encode(['pages'=>$old],JSON_THROW_ON_ERROR));

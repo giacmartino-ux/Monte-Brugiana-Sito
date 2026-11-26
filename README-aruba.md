@@ -9,3 +9,5 @@ Bozza tecnica PHP, non ancora collaudata su Aruba. Non unire a main.
 Limiti: link esterni segnalati per controllo manuale; nessuna verifica di recapito email/telefono; pubblicazione multi-file con backup e rollback, non transazione atomica globale. Non è ancora una consegna definitiva.
 
 Controlli aggiunti: scadenza sessione dopo due ore, uscita esplicita, limitazione tentativi di accesso condivisa tra sessioni, controllo lato server delle foto e delle destinazioni interne. PHP DOM richiesto. La verifica dei permessi e il collaudo effettivo su Aruba restano obbligatori.
+
+Il controllo automatico tests/aruba-smoke.py esegue prove con il server PHP locale e una copia temporanea (mai sul sito online). Verifica autenticazione, CSRF, salvataggio, immagini, nuova pagina, revisione concorrente, rifiuto di input malevoli, backup e ripristino. PHP DOM è richiesto. Il controllo Apache/.htaccess e HTTPS deve essere ripetuto sul vero hosting. Non caricare tests/ né file di sviluppo.

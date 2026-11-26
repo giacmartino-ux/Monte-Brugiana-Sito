@@ -1,8 +1,9 @@
 Options -Indexes
+DirectoryIndex disabled
 DirectoryIndex index.html
 RewriteEngine On
 RewriteRule ^editor/?$ editor.php [L]
-RewriteRule ^privato(?:/|$) - [F,L]
+RewriteRule ^(?:privato|tests)(?:/|$) - [F,L]
 RewriteRule ^(?:editor\.html|auth-editor\.php|server\.js|package\.json|README-aruba\.md|\.git.*)$ - [F,L]
 <IfModule mod_headers.c>
 Header always set X-Content-Type-Options "nosniff"

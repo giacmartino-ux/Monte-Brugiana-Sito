@@ -3,11 +3,11 @@ declare(strict_types=1);
 require __DIR__.'/auth-editor.php';
 if (!is_file(STATE.'/password.hash')) {
  http_response_code(503);
- exit('Editor non configurato. Installare la password secondo README-aruba.md.');
+ exit('Editor non configurato. Completare la configurazione iniziale dal File Manager.');
 }
 if ($_SERVER['REQUEST_METHOD']==='POST') {
  if (!hash_equals($_SESSION['csrf'], (string)($_POST['csrf']??''))) {http_response_code(403);exit;}
- if (isset($_POST['logout'])) {session_destroy();header('Location: /editor');exit;}
+ if (isset($_POST['logout'])) {$_SESSION=[];session_destroy();header('Location: /editor');exit;}
  $gate=fopen(STATE.'/login.lock','c+');
  if(!$gate||!flock($gate,LOCK_EX)){http_response_code(503);exit;}
  $retry=(int)stream_get_contents($gate);
