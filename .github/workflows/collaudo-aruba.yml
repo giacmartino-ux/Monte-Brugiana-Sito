@@ -1,0 +1,39 @@
+name: Collaudo Aruba PHP
+on:
+  push:
+    branches: [aruba-indisparte]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, libxml, fileinfo, gd
+          coverage: none
+      - name: Sintassi e moduli
+        run: |
+          php -v
+          php -m
+          for f in api-editor.php auth-editor.php editor.php tests/router.php; do php -l "$f"; done
+          node --check editor.js
+          node --check guida.js
+      - name: Prove end-to-end su copia temporanea
+        run: python3 tests/aruba-smoke.py
+      - name: Pacchetto di installazione
+        run: |
+          mkdir -p /tmp/indisparte
+          cp -r assets privato /tmp/indisparte/
+          cp .htaccess *.html *.css *.svg guida.js editor.js editor.php auth-editor.php api-editor.php robots.txt sitemap.xml /tmp/indisparte/
+          rm -f /tmp/indisparte/privato/.gitignore
+          cd /tmp/indisparte && zip -qr "$GITHUB_WORKSPACE/indisparte-aruba.zip" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: indisparte-aruba
+          path: indisparte-aruba.zip
+          retention-days: 14
